@@ -1,91 +1,113 @@
 # ISP
 Repository for my ISP game.
 import random
+
+action = None
+enemyAction = None
+turn = True
 health = int(100)
 enemyHealth = int(100)
-action = " "
-potion = True
-shot = int(0)
-attack = int(0)
-shield = False
-enemyAction = int(0)
-enemyPotion = True
-enemyShield = False
-tempDamage = int(0)
-while health > 0 and enemyHealth > 0:
-    action = input("Type stats, shoot, attack, block, or potion. ")
-    if action == "stats":
-        print("Your health:", health)
-        print("Enemy health:", enemyHealth)
-        print("Gear:")
-        print("Sword - 10 damage, 90% accuracy")
-        print("Bow - 20 damage, 45% accuracy")
-        print("Shield - halves the damage of the enemy's next attack\n and adds it to your next attack")
-        if potion == True:
-            print("Potion x1 - heals 25 health")
-    elif action == "shoot":
-        shot = random.randint(1, 100)
-        if shot <= 45:
-            enemyHealth -= 20
-            enemyHealth -= tempDamage
-            print("Hit! Enemy's health:", enemyHealth, "\n")
+roll = int(0)
+SWORD_ACCURACY = int(90)
+BOW_ACCURACY = int(45)
+SWORD_DAMAGE = int(10)
+BOW_DAMGE = int(20)
+
+def sword(turn):
+    #calculate enemy's health if you attack with a sword
+    if turn == True:
+        print("You swing at the enemy with your sword!")
+        if roll <= SWORD_ACCURACY:
+            enemyHealth -= SWORD_DAMAGE
+            print("Hit! Enemy's health is now", enemyHealth)
         else:
-            print("Miss! Enemy's health:", enemyHealth, "\n")
-    elif action == "attack":
-        attack = random.randint(1, 100)
-        if attack <= 90:
-            enemyHealth -= 10
-            enemyHealth -= tempDamage
-            print("Hit! Enemy's health:", enemyHealth, "\n")
-        else:
-            print("Miss! Enemy's health:", enemyHealth, "\n")
-    elif action == "block":
-        shield = True
-        print("You ready your shield.\n")
-    elif action == "potion":
-        if potion == True:
-            health += 25
-            print("You drank your potion! Current health:", health, "\n")
-            potion = False
-        else:
-            print("You don't have a potion!\n")
-            action = " "
+            print("Miss!")
+        return enemyHealth
+    #calculate your health
     else:
-        print("Invalid command! Enter a new command.\n")
-        action = " "
-    tempDamage = 0
-    if action != " " and action != "stats" and enemyHealth > 0:
-        enemyAction = random.randint(1, 2)
-        if enemyAction == 1:
-            print("The enemy shoots at you with a bow!")
-            shot = random.randint(1, 100)
-            if shot <= 45:
-                if shield == False:
-                    health -= 20
-                    print("Hit! Your health:", health, "\n")
-                elif shield == True:
-                    health -= 10
-                    tempDamage = 10
-                    print("Blocked hit! Your health:", health, "\n")
-            else:
-                print("Miss! Your health:", health, "\n")
-        elif enemyAction == 2:
-            print("The enemy swings at you with a sword!")
-            attack = random.randint(1, 100)
-            if attack <= 90:
-                if shield == False:
-                    health -= 10
-                    print("Hit! Your health:", health, "\n")
-                elif shield == True:
-                    health -= 5
-                    tempDamage = 5
-                    print("Blocked hit! Your health:", health, "\n")
-            else:
-                print("Miss! Your health:", health, "\n")
-        #else:
-            #print("filler")
-        shield = False
-if health <= 0:
-    input("You lose! Press enter to exit.")
-if enemyHealth <=0:
-    input("You win! Press enter to exit.")
+        print("The enemy swings at you with a sword!")
+        if roll <= SWORD_ACCURACY:
+            health -= SWORD_DAMAGE
+            print("Hit! Your health is now", health)
+        else:
+            print("Miss!")
+        return health
+
+def bow(turn):
+    #same as sword, but calculate for a bow
+    if turn == True:
+        print("You fire at the enemy with your bow!")
+        if roll <= BOW_ACCURACY:
+            enemyHealth -= BOW_DAMAGE
+            print("Hit! Enemy's health is now", enemyHealth)
+        else:
+            print("Miss!")
+        return enemyHealth
+    #calculate your health
+    else:
+        print("The enemy fires at you with a bow!")
+        if roll <= BOW_ACCURACY:
+            health -= BOW_DAMAGE
+            print("Hit! Your health is now", health)
+        else:
+            print("Miss!")
+        return health
+
+def stats():
+    #write out information about your stats
+    print("Your health:", health)
+    print("Enemy health:", enemyHealth)
+    print(
+    """
+Your gear:
+Sword - 10 damage, 90% accuracy
+Bow - 20 damage, 45% accuracy
+    """
+    )
+
+def turnSwitch(turn):
+    if turn == True:
+        turn = False
+    else:
+        turn = True
+    return turn
+
+#intro
+print(
+"""
+Welcome to [name]! In this turn-based battle, you will fight against an enemy.
+Type 'stats' to see your health and gear, or 'sword' or 'bow' to get straight into the action!
+"""
+)
+while health > 0 and enemyHealth > 0:
+    #main battle loop
+    if turn == True:
+        roll = random.randint(1, 100)
+        action = input("Enter your action: ")
+        if action == "stats":
+            stats()
+        elif action == "sword":
+            sword(True)
+            if enemyHealth > 0: 
+                turnSwitch(True)
+        elif action == "bow":
+            bow(True)
+            if enemyHealth > 0:
+                turnSwitch(True)
+        else:
+            action = input("Invalid action. Enter again. ")
+    else:
+        roll = random.randint(1, 100)
+        enemyAction = random.choice("sword", "bow")
+        if enemyAction == sword:
+            sword(False)
+            turnSwitch(False)
+        else:
+            bow(False)
+            turnSwitch(False)
+#conclusion
+if health > 0:
+    print("You win! Congratulations!")
+elif enemyHealth > 0:
+    print("You lose.")
+input("Press enter to exit.")
