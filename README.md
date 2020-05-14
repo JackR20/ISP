@@ -11,9 +11,9 @@ roll = int(0)
 SWORD_ACCURACY = int(90)
 BOW_ACCURACY = int(45)
 SWORD_DAMAGE = int(10)
-BOW_DAMGE = int(20)
+BOW_DAMAGE = int(20)
 
-def sword(turn):
+def sword(turn, health, enemyHealth):
     #calculate enemy's health if you attack with a sword
     if turn == True:
         print("You swing at the enemy with your sword!")
@@ -33,7 +33,7 @@ def sword(turn):
             print("Miss!")
         return health
 
-def bow(turn):
+def bow(turn, health, enemyHealth):
     #same as sword, but calculate for a bow
     if turn == True:
         print("You fire at the enemy with your bow!")
@@ -65,12 +65,12 @@ Bow - 20 damage, 45% accuracy
     """
     )
 
-def turnSwitch(turn):
-    if turn == True:
-        turn = False
-    else:
-        turn = True
-    return turn
+#def turnSwitch(turn):
+#    if turn == True:
+#        turn = False
+#    else:
+#        turn = True
+#    return turn
 
 #intro
 print(
@@ -87,13 +87,13 @@ while health > 0 and enemyHealth > 0:
         if action == "stats":
             stats()
         elif action == "sword":
-            sword(True)
-            if enemyHealth > 0: 
-                turnSwitch(True)
-        elif action == "bow":
-            bow(True)
+            sword(True, health, enemyHealth)
             if enemyHealth > 0:
-                turnSwitch(True)
+                turn = False
+        elif action == "bow":
+            bow(True, health, enemyHealth)
+            if enemyHealth > 0:
+                turn = False
         else:
             action = input("Invalid action. Enter again. ")
     else:
@@ -101,13 +101,14 @@ while health > 0 and enemyHealth > 0:
         enemyAction = random.choice("sword", "bow")
         if enemyAction == sword:
             sword(False)
-            turnSwitch(False)
+            turn = True
         else:
             bow(False)
-            turnSwitch(False)
+            turn = True
 #conclusion
 if health > 0:
     print("You win! Congratulations!")
 elif enemyHealth > 0:
     print("You lose.")
+input("Press enter to exit.")
 input("Press enter to exit.")
