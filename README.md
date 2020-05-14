@@ -1,6 +1,7 @@
 # ISP
 Repository for my ISP game.
 import random
+
 health = int(100)
 enemyHealth = int(100)
 action = " "
@@ -12,17 +13,27 @@ enemyAction = int(0)
 enemyPotion = True
 enemyShield = False
 tempDamage = int(0)
+
+#intro
+print(
+    """
+Welcome to [name]! In this turn-based battle, you will fight against an opponent of equal strength.
+Type "stats" to see your gear and info!
+    """
+    )
+#battle loop
 while health > 0 and enemyHealth > 0:
-    action = input("Type stats, shoot, attack, block, or potion. ")
+    action = input("Input your action: ")
     if action == "stats":
         print("Your health:", health)
         print("Enemy health:", enemyHealth)
         print("Gear:")
         print("Sword - 10 damage, 90% accuracy")
         print("Bow - 20 damage, 45% accuracy")
-        print("Shield - halves the damage of the enemy's next attack\n and adds it to your next attack")
         if potion == True:
             print("Potion x1 - heals 25 health")
+        print("Shield - halves the damage of the enemy's next attack\n and adds it to your next attack")
+        print("Available actions: stats, attack, shoot, block, potion")
     elif action == "shoot":
         shot = random.randint(1, 100)
         if shot <= 45:
@@ -54,6 +65,7 @@ while health > 0 and enemyHealth > 0:
         print("Invalid command! Enter a new command.\n")
         action = " "
     tempDamage = 0
+    #enemy turn
     if action != " " and action != "stats" and enemyHealth > 0:
         enemyAction = random.randint(1, 2)
         if enemyAction == 1:
@@ -85,6 +97,7 @@ while health > 0 and enemyHealth > 0:
         #else:
             #print("filler")
         shield = False
+#conclusion
 if health <= 0:
     input("You lose! Press enter to exit.")
 if enemyHealth <=0:
