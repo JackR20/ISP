@@ -1,6 +1,15 @@
 # ISP
 Repository for my ISP game.
 import random
+import pygame
+
+pygame.init()
+display = pygame.display.set_mode((400, 400))
+display.fill((255, 255, 255))
+pygame.display.update()
+font = pygame.font.Font(None, 18)
+t = None
+color = (0, 0, 0)
 
 health = int(100)
 enemyHealth = int(100)
@@ -22,13 +31,11 @@ SWORD_DAMAGE = int(10)
 BOW_DAMAGE = int(20)
 POTION_HEALTH = int(25)
 
-def intro():
-    print(
-    """
-Welcome to [name]! In this turn-based battle, you will fight against an opponent of equal strength.
-Type "stats" to see your gear and info!
-    """
-    )
+def text(t, color, coords, size):
+    font = pygame.font.Font(None, size)
+    t = font.render(t, 1, color)
+    display.blit(t, coords)
+    pygame.display.update()
 
 def conclusion():
     if health > 0 and enemyHealth <= 0:
@@ -38,9 +45,31 @@ def conclusion():
     input("Press enter to exit.")
 
 #intro
-intro()
+text(
+    """
+Welcome! In this turn-based battle,\n you will fight against an enemy of equal strength.\n
+Press 'Stats' to see your gear, info, and actions you can take against the enemy.\n
+Your goal is to reduce the enemy's health to zero.\n
+Press enter to continue.
+    """, (0, 0, 0), (50, 50), 20)
+input()
+display.fill((255, 255, 255))
+pygame.display.update()
 #battle loop
 while health > 0 and enemyHealth > 0:
+    #GUI
+    pygame.draw.rect(display, (128, 128, 128), (150, 25, 100, 50))
+    text("Stats", (0, 0, 0), (175, 40), 20)
+    pygame.draw.rect(display, (255, 0, 0), (50, 100, 100, 50))
+    text("Sword", (0, 0, 0), (75, 115), 20)
+    pygame.draw.rect(display, (0, 0, 255), (250, 100, 100, 50))
+    text("Bow", (0, 0, 0), (275, 115), 20)
+    pygame.draw.rect(display, (255, 255, 0), (50, 250, 100, 50))
+    text("Shield", (0, 0, 0), (75, 265), 20)
+    pygame.draw.rect(display, (0, 255, 0), (250, 250, 100, 50))
+    text("Potion", (0, 0, 0), (275, 265), 20)
+    pygame.display.update()
+
     action = input("Input your action: ")
     if action == "stats":
         print("Your health:", health)
