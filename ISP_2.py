@@ -102,6 +102,7 @@ while health > 0 and enemyHealth > 0:
 
     elif action == "shoot" and arrows > 0:
         shot = random.randint(1, 100)
+        print("You shoot at the enemy with a bow!")
         if shot <= BOW_ACCURACY:
             enemyHealth -= BOW_DAMAGE
             enemyHealth -= tempDamage
@@ -115,6 +116,7 @@ while health > 0 and enemyHealth > 0:
 
     elif action == "attack":
         attack = random.randint(1, 100)
+        print("You swing at the enemy with a sword!")
         if attack <= SWORD_ACCURACY:
             enemyHealth -= SWORD_DAMAGE
             enemyHealth -= tempDamage
